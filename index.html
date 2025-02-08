@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, white, cyan, limegreen);
+            overflow: hidden;
+        }
+
+         /* LOADING SCREEN */
+         .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeOut 0.8s ease-out 2.5s forwards;
+        }
+
+        .loading-logo {
+            width: 150px;
+            height: 150px;
+            opacity: 0;
+            transform: scale(1.5);
+            animation: fadeInScale 2s ease-in-out forwards;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(1.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .container {
+            width: 350px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-in-out 3s forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 { margin-bottom: 15px; }
+
+        .input-box { margin: 10px 0; }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            background: limegreen;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn:hover { background: darkgreen; }
+
+        .toggle {
+            margin-top: 10px;
+            color: blue;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* POPUP NOTIFICATION */
+        .popup {
+            position: fixed;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: red;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            transition: top 0.5s ease-in-out;
+        }
+
+        .popup.show {
+            top: 10px;
+            display: block;
+        }
+
+        .popup.success { background: green; }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen">
+        <img class="loading-logo" src="C:\Users\Panther\OneDrive\Desktop\Hackathon project\r.png" alt="Loading Logo">
+    </div>
+
+    <!-- POPUP MESSAGE -->
+    <div id="popup" class="popup"></div>
+
+    <!-- LOGIN CONTAINER -->
+    <div class="container">
+        <h2 id="form-title">Login</h2>
+
+        <div id="login-form">
+            <div class="input-box">
+                <input type="text" id="login-phone" placeholder="Enter Phone Number" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="login-password" placeholder="Enter Password" required>
+            </div>
+            <button class="btn" onclick="login()">Login</button>
+            <p class="toggle" onclick="toggleForm()">Don't have an account? Sign up</p>
+        </div>
+
+        <div id="signup-form" style="display: none;">
+            <div class="input-box">
+                <input type="text" id="signup-name" placeholder="Enter Your Name" required>
+            </div>
+            <div class="input-box">
+                <input type="text" id="signup-phone" placeholder="Enter Phone Number" maxlength="10" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="signup-password" placeholder="Enter Password" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required>
+            </div>
+            <button class="btn" onclick="signup()">Sign Up</button>
+            <p class="toggle" onclick="toggleForm()">Already have an account? Login</p>
+        </div>
+    </div>
+
+    <script>
+       function toggleForm() {
+        let loginForm = document.getElementById("login-form");
+        let signupForm = document.getElementById("signup-form");
+        let title = document.getElementById("form-title");
+
+        if (loginForm.style.display === "none") {
+            loginForm.style.display = "block";
+            signupForm.style.display = "none";
+            title.innerText = "Login";
+        } else {
+            loginForm.style.display = "none";
+            signupForm.style.display = "block";
+            title.innerText = "Sign Up";
+        }
+    }
+
+    function showNotification(message, success = false) {
+        let popup = document.getElementById("popup");
+        popup.innerText = message;
+        popup.classList.add("show");
+
+        if (success) {
+            popup.classList.add("success");
+        } else {
+            popup.classList.remove("success");
+        }
+
+        setTimeout(() => {
+            popup.classList.remove("show");
+        }, 3000);
+    }
+
+    function signup() {
+        let name = document.getElementById("signup-name").value.trim();
+        let phone = document.getElementById("signup-phone").value.trim();
+        let password = document.getElementById("signup-password").value;
+        let confirmPassword = document.getElementById("signup-confirm-password").value;
+
+        if (!name || !phone || !password || !confirmPassword) {
+            showNotification("All fields are required!");
+            return;
+        }
+
+        if (phone.length !== 10 || isNaN(phone)) {
+            showNotification("Enter a valid 10-digit phone number.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            showNotification("Passwords do not match!");
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+
+        if (users.find(user => user.phone === phone)) {
+            showNotification("Number already exists!");
+            return;
+        }
+
+        users.push({ name, phone, password });
+        localStorage.setItem("users", JSON.stringify(users));
+
+        showNotification("Account created! Login now.", true);
+        toggleForm();
+    }
+
+    function login() {
+        let phone = document.getElementById("login-phone").value.trim();
+        let password = document.getElementById("login-password").value;
+
+        if (!phone || !password) {
+            showNotification("Please enter phone number and password!");
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+
+        let user = users.find(user => user.phone === phone && user.password === password);
+
+        if (!user) {
+            showNotification("Invalid phone number or password!");
+            return;
+        }
+
+        localStorage.setItem("userName", user.name);
+
+        showNotification("Login successful!", true);
+
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 1000);
+    }
+    </script>
+
+</body>
+</html>

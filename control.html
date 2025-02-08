@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renewable Energy Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Patua+One&family=Rajdhani:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            font-family: 'Lato', sans-serif;
+            background: url("images/background.jpg") no-repeat center center/cover;
+        }
+
+        /* Logo */
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            height: 50px;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Foreground Image */
+        .foreground {
+            position: absolute;
+            bottom: 55%;
+            left: 0;
+            width: 100%;
+            z-index: -1;
+            object-fit: contain;
+        }
+
+        .menu {
+            padding: 10px 20px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .menu:hover {
+            background: white;
+            color: black;
+            border-radius: 5px;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            position: absolute;
+            top: 50%;
+            width: 300px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transform: translateY(-50%);
+        }
+        .box1 { left: 30%; }
+        .box2 { left: 60%; }
+
+        .info-box img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 10px;
+        }
+
+        .efficiency {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .saving {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Toggle Button */
+        .optimize-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .switch {
+            position: relative;
+            width: 50px;
+            height: 25px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #b3d9ff;
+            border-radius: 25px;
+            transition: 0.4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 3.5px;
+            background-color: white;
+            transition: transform 0.3s ease-in-out;
+            border-radius: 50%;
+        }
+
+        .switch input:checked + .slider {
+            background: #b5fad9;
+        }
+
+        .switch input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: -300px;
+            background: #28a745;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: right 0.5s ease-in-out, opacity 0.3s;
+            opacity: 0;
+        }
+
+        .notification.show {
+            right: 20px;
+            opacity: 1;
+        }
+
+        .notification.disabled {
+            background: #dc3545;
+        }
+/* Devices Box */
+.devices-box {
+    left: 50%;
+    top: 80%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Horizontal Device Layout */
+.device-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Vertical Device Layout */
+.device-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Device Icon */
+.device-icon {
+    font-size: 40px;
+}
+
+/* Slidable Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff0000; /* Default Off (Red) */
+    transition: 0.4s;
+    border-radius: 25px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 3.5px;
+    background-color: white;
+    transition: transform 0.3s ease-in-out;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .slider {
+    background: #008000; /* Turned On (Green) */
+}
+
+.toggle-switch input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+
+
+    </style>
+</head>
+<body>
+
+     <!-- Logo -->
+     <img src="C:\Users\Panther\OneDrive\Desktop\Hackathon project\r.png" alt="Logo" class="logo">
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Foreground Image -->
+    <img src="C:\Users\Panther\OneDrive\Desktop\Hackathon project\Design 35.png" alt="Energy Data" class="foreground">
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="menu" onclick="window.location.href='dashboard.html';">Home</div>
+        <div class="menu" onclick="window.location.href='dashboard.html';">Login</div>
+        <div class="menu">Services</div>
+        <div class="menu">Contact</div>
+    </div>
+
+    <!-- Solar Panel Box -->
+    <div class="info-box box1">
+        <img src="C:\Users\Panther\OneDrive\Desktop\Hackathon project\solar-panel.png" alt="Solar Panel">
+        <h2>Solar Panel Metrics</h2>
+        <p class="efficiency" id="solar-efficiency">Calculating...</p>
+        <p>Production: <span id="solar-production">0</span> kWh</p>
+        <p>Consumption: <span id="solar-consumption">0</span> kWh</p>
+        <p class="saving">Savings: <span id="solar-savings">0</span> kWh</p>
+
+        <div class="optimize-container">
+            <span>Optimize</span>
+            <label class="switch">
+                <input type="checkbox" class="toggle-optimize">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Wind Turbine Box -->
+    <div class="info-box box2">
+        <img src="C:\Users\Panther\OneDrive\Desktop\Hackathon project\windmill.png" alt="Wind Turbine">
+        <h2>Wind Turbine Metrics</h2>
+        <p class="efficiency" id="wind-efficiency">Calculating...</p>
+        <p>Production: <span id="wind-production">0</span> kWh</p>
+        <p>Consumption: <span id="wind-consumption">0</span> kWh</p>
+        <p class="saving">Savings: <span id="wind-savings">0</span> kWh</p>
+
+        <div class="optimize-container">
+            <span>Optimize</span>
+            <label class="switch">
+                <input type="checkbox" class="toggle-optimize">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+
+
+    <script>
+        function getRandomValue(min, max) {
+            return (Math.random() * (max - min) + min).toFixed(2);
+        }
+
+        function updateData() {
+    let solarProduction = parseFloat(getRandomValue(2, 10));
+    let solarConsumption = parseFloat(getRandomValue(1, 8));
+    let solarSavings = Math.max(0, (solarProduction - solarConsumption).toFixed(2));
+    let solarEfficiency = ((solarProduction / 10) * 100).toFixed(1);
+
+    let windProduction = parseFloat(getRandomValue(3, 12));
+    let windConsumption = parseFloat(getRandomValue(2, 10));
+    let windSavings = Math.max(0, (windProduction - windConsumption).toFixed(2));
+    let windEfficiency = ((windProduction / 12) * 100).toFixed(1);
+
+    // Update solar panel values
+    document.getElementById("solar-production").textContent = solarProduction;
+    document.getElementById("solar-consumption").textContent = solarConsumption;
+    document.getElementById("solar-savings").textContent = solarSavings;
+    
+    let solarEfficiencyElem = document.getElementById("solar-efficiency");
+    solarEfficiencyElem.textContent = `${solarEfficiency}%`;
+    solarEfficiencyElem.style.color = solarEfficiency >= 80 ? "green" : "red"; // Change color
+
+    // Update wind turbine values
+    document.getElementById("wind-production").textContent = windProduction;
+    document.getElementById("wind-consumption").textContent = windConsumption;
+    document.getElementById("wind-savings").textContent = windSavings;
+    
+    let windEfficiencyElem = document.getElementById("wind-efficiency");
+    windEfficiencyElem.textContent = `${windEfficiency}%`;
+    windEfficiencyElem.style.color = windEfficiency >= 80 ? "green" : "red"; // Change color
+}
+
+// Run update every 5 seconds
+setInterval(updateData, 5000);
+updateData();
+
+
+        setInterval(updateData, 5000);
+        updateData();
+
+        document.querySelectorAll(".toggle-optimize").forEach(button => {
+            button.addEventListener("change", function() {
+                let msg = this.checked ? "✅ Optimization Enabled!" : "❌ Optimization Disabled!";
+                showNotification(msg, this.checked);
+            });
+        });
+
+        function showNotification(message, isEnabled) {
+            let notification = document.getElementById("notification");
+            notification.innerText = message;
+            notification.classList.toggle("disabled", !isEnabled);
+            notification.classList.add("show");
+            setTimeout(() => notification.classList.remove("show"), 3000);
+        }
+
+        document.getElementById("bulb-toggle").addEventListener("change", function() {
+    let bulbConsumption = document.getElementById("bulb-consumption");
+    if (this.checked) {
+        bulbConsumption.textContent = "5"; // Default power when ON
+    } else {
+        bulbConsumption.textContent = "0"; // No power when OFF
+    }
+});
+
+    </script>
+
+</body>
+</html>
