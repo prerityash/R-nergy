@@ -1,4 +1,5 @@
-#🌍 Renewable Energy Dashboard
+# 🌍 Renewable Energy Dashboard  
+
 📌 Project Description
 This is a web-based dashboard designed to monitor, manage, and optimize renewable energy sources such as solar panels and wind turbines. It provides real-time energy production and consumption data and allows users to control home appliances (Bulb & Fan) with toggle switches. The dashboard offers a user-friendly interface with a responsive design.
 
